@@ -5,6 +5,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
+var _Table = _interopRequireDefault(require("./stories/Table"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _default = _Table["default"];
+exports["default"] = _default;
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
 var _react = _interopRequireDefault(require("react"));
 
 var _reactBootstrap = require("react-bootstrap");
@@ -29,11 +42,11 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function TestComponent(_ref) {
-  var _tableProp$thead;
+function SortableTable(_ref) {
+  var _tableProps$thead;
 
-  var _ref$tableProp = _ref.tableProp,
-      tableProp = _ref$tableProp === void 0 ? {} : _ref$tableProp,
+  var _ref$tableProps = _ref.tableProps,
+      tableProps = _ref$tableProps === void 0 ? {} : _ref$tableProps,
       _ref$data = _ref.data,
       data = _ref$data === void 0 ? [] : _ref$data,
       _ref$setData = _ref.setData,
@@ -146,7 +159,7 @@ function TestComponent(_ref) {
     return data;
   };
 
-  return /*#__PURE__*/_react["default"].createElement(_reactBootstrap.Table, tableProp, /*#__PURE__*/_react["default"].createElement("thead", tableProp === null || tableProp === void 0 ? void 0 : tableProp.thead, /*#__PURE__*/_react["default"].createElement("tr", tableProp === null || tableProp === void 0 ? void 0 : (_tableProp$thead = tableProp.thead) === null || _tableProp$thead === void 0 ? void 0 : _tableProp$thead.tr, firstColumnRender && /*#__PURE__*/_react["default"].createElement("th", firstColumnProp, firstColumnLabel), columns.map(function (col, index) {
+  return /*#__PURE__*/_react["default"].createElement(_reactBootstrap.Table, tableProps, /*#__PURE__*/_react["default"].createElement("thead", tableProps === null || tableProps === void 0 ? void 0 : tableProps.thead, /*#__PURE__*/_react["default"].createElement("tr", tableProps === null || tableProps === void 0 ? void 0 : (_tableProps$thead = tableProps.thead) === null || _tableProps$thead === void 0 ? void 0 : _tableProps$thead.tr, firstColumnRender && /*#__PURE__*/_react["default"].createElement("th", firstColumnProp, firstColumnLabel), columns.map(function (col, index) {
     return /*#__PURE__*/_react["default"].createElement("th", {
       onClick: function onClick() {
         return sortByColumn(col.value);
@@ -158,10 +171,10 @@ function TestComponent(_ref) {
     }, col.label, !noSortColumns.includes(col.value) && /*#__PURE__*/_react["default"].createElement("span", {
       className: "ms-1"
     }, col.sortOrder === undefined ? sortIconAsc || '↓' : col.sortOrder === 'desc' ? sortIconAsc || '↓' : sortIconDesc || '↑'));
-  }), lastColumnRender && /*#__PURE__*/_react["default"].createElement("th", null, lastColumnLabel))), /*#__PURE__*/_react["default"].createElement("tbody", tableProp === null || tableProp === void 0 ? void 0 : tableProp.tbody, data.map(function (d, index1) {
-    var _tableProp$tbody;
+  }), lastColumnRender && /*#__PURE__*/_react["default"].createElement("th", null, lastColumnLabel))), /*#__PURE__*/_react["default"].createElement("tbody", tableProps === null || tableProps === void 0 ? void 0 : tableProps.tbody, data.map(function (d, index1) {
+    var _tableProps$tbody;
 
-    return /*#__PURE__*/_react["default"].createElement("tr", _extends({}, tableProp === null || tableProp === void 0 ? void 0 : (_tableProp$tbody = tableProp.tbody) === null || _tableProp$tbody === void 0 ? void 0 : _tableProp$tbody.tr, {
+    return /*#__PURE__*/_react["default"].createElement("tr", _extends({}, tableProps === null || tableProps === void 0 ? void 0 : (_tableProps$tbody = tableProps.tbody) === null || _tableProps$tbody === void 0 ? void 0 : _tableProps$tbody.tr, {
       key: "trIndex-".concat(index1)
     }), firstColumnRender && /*#__PURE__*/_react["default"].createElement("td", null, firstColumnRender(d)), columns.map(function (col, index2) {
       return /*#__PURE__*/_react["default"].createElement("td", {
@@ -171,8 +184,8 @@ function TestComponent(_ref) {
   })));
 }
 
-TestComponent.propTypes = {
-  tableProp: _propTypes["default"].object,
+SortableTable.propTypes = {
+  tableProps: _propTypes["default"].object,
   data: _propTypes["default"].arrayOf(_propTypes["default"].object),
   setData: _propTypes["default"].func,
   setColumns: _propTypes["default"].func,
@@ -191,13 +204,50 @@ TestComponent.propTypes = {
     console.log(key);
 
     if (_typeof(propValue[key]) !== 'object') {
-      return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "Columns" prop should be an array of object with "value" and "label" property.');
+      return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "columns" prop should be an array of object with "value" and "label" property.');
     }
 
     if (propValue[key].value === undefined || propValue[key].label === undefined) {
-      return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "Columns" prop should be an array of object with "value" and "label" property.');
+      return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "columns" prop should be an array of object with "value" and "label" property.');
     }
   })
 };
-var _default = TestComponent;
+var _default = SortableTable;
 exports["default"] = _default;
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = exports.Columns = void 0;
+
+var _Table = _interopRequireDefault(require("./Table"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _default = {
+  title: "Table",
+  component: _Table["default"]
+};
+exports["default"] = _default;
+var columns = [{
+  value: header1,
+  label: 'HEADER 1'
+}, {
+  value: header2,
+  label: 'HEADER 2'
+}, {
+  value: header3,
+  label: 'HEADER 3'
+}, {
+  value: header4,
+  label: 'HEADER 4'
+}];
+
+var Columns = function Columns() {
+  return /*#__PURE__*/React.createElement(_Table["default"], {
+    columns: columns
+  });
+};
+
+exports.Columns = Columns;
