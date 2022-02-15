@@ -11,6 +11,8 @@ var _reactBootstrap = require("react-bootstrap");
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
+var _excluded = ["data", "setData", "columns", "setColumns", "sortIconAsc", "sortIconDesc", "dateColumns", "noSortColumns", "firstColumnRender", "firstColumnLabel", "firstColumnHeaderProp", "lastColumnRender", "lastColumnLabel", "lastColumnHeaderProp", "columnRender", "addProps"];
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -29,12 +31,12 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function TestComponent(_ref) {
-  var _tableProp$thead;
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
-  var _ref$tableProp = _ref.tableProp,
-      tableProp = _ref$tableProp === void 0 ? {} : _ref$tableProp,
-      _ref$data = _ref.data,
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function SortableTable(_ref) {
+  var _ref$data = _ref.data,
       data = _ref$data === void 0 ? [] : _ref$data,
       _ref$setData = _ref.setData,
       setData = _ref$setData === void 0 ? function () {} : _ref$setData,
@@ -50,12 +52,16 @@ function TestComponent(_ref) {
       noSortColumns = _ref$noSortColumns === void 0 ? [] : _ref$noSortColumns,
       firstColumnRender = _ref.firstColumnRender,
       firstColumnLabel = _ref.firstColumnLabel,
-      _ref$firstColumnProp = _ref.firstColumnProp,
-      firstColumnProp = _ref$firstColumnProp === void 0 ? {} : _ref$firstColumnProp,
+      _ref$firstColumnHeade = _ref.firstColumnHeaderProp,
+      firstColumnHeaderProp = _ref$firstColumnHeade === void 0 ? {} : _ref$firstColumnHeade,
       lastColumnRender = _ref.lastColumnRender,
       lastColumnLabel = _ref.lastColumnLabel,
+      _ref$lastColumnHeader = _ref.lastColumnHeaderProp,
+      lastColumnHeaderProp = _ref$lastColumnHeader === void 0 ? {} : _ref$lastColumnHeader,
       _ref$columnRender = _ref.columnRender,
-      columnRender = _ref$columnRender === void 0 ? [] : _ref$columnRender;
+      columnRender = _ref$columnRender === void 0 ? [] : _ref$columnRender,
+      addProps = _ref.addProps,
+      rest = _objectWithoutProperties(_ref, _excluded);
 
   var sortByColumn = function sortByColumn(columnName) {
     var isDate = dateColumns.includes(columnName);
@@ -136,18 +142,18 @@ function TestComponent(_ref) {
     }
   };
 
-  var renderData = function renderData(data, column, columnRender) {
+  var renderData = function renderData(value, column, columnIndex, data, dataIndex, columnRender) {
     for (var i = 0; i < columnRender.length; i++) {
       if (column.value === columnRender[i].column) {
-        return columnRender[i].render(data);
+        return columnRender[i].render(value, column, columnIndex, data, dataIndex);
       }
     }
 
-    return data;
+    return value;
   };
 
-  return /*#__PURE__*/_react["default"].createElement(_reactBootstrap.Table, tableProp, /*#__PURE__*/_react["default"].createElement("thead", tableProp === null || tableProp === void 0 ? void 0 : tableProp.thead, /*#__PURE__*/_react["default"].createElement("tr", tableProp === null || tableProp === void 0 ? void 0 : (_tableProp$thead = tableProp.thead) === null || _tableProp$thead === void 0 ? void 0 : _tableProp$thead.tr, firstColumnRender && /*#__PURE__*/_react["default"].createElement("th", firstColumnProp, firstColumnLabel), columns.map(function (col, index) {
-    return /*#__PURE__*/_react["default"].createElement("th", {
+  return _react["default"].createElement(_reactBootstrap.Table, rest, _react["default"].createElement("thead", addProps === null || addProps === void 0 ? void 0 : addProps.tHead, _react["default"].createElement("tr", addProps === null || addProps === void 0 ? void 0 : addProps.tHeadRow, firstColumnRender && _react["default"].createElement("th", firstColumnHeaderProp, firstColumnLabel), columns.map(function (col, index) {
+    return _react["default"].createElement("th", _extends({
       onClick: function onClick() {
         return sortByColumn(col.value);
       },
@@ -155,49 +161,53 @@ function TestComponent(_ref) {
       style: {
         cursor: 'pointer'
       }
-    }, col.label, !noSortColumns.includes(col.value) && /*#__PURE__*/_react["default"].createElement("span", {
+    }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tHeading) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tHeading(col, index) : addProps === null || addProps === void 0 ? void 0 : addProps.tHeading), col.label, !noSortColumns.includes(col.value) && _react["default"].createElement("span", {
       className: "ms-1"
     }, col.sortOrder === undefined ? sortIconAsc || '↓' : col.sortOrder === 'desc' ? sortIconAsc || '↓' : sortIconDesc || '↑'));
-  }), lastColumnRender && /*#__PURE__*/_react["default"].createElement("th", null, lastColumnLabel))), /*#__PURE__*/_react["default"].createElement("tbody", tableProp === null || tableProp === void 0 ? void 0 : tableProp.tbody, data.map(function (d, index1) {
-    var _tableProp$tbody;
-
-    return /*#__PURE__*/_react["default"].createElement("tr", _extends({}, tableProp === null || tableProp === void 0 ? void 0 : (_tableProp$tbody = tableProp.tbody) === null || _tableProp$tbody === void 0 ? void 0 : _tableProp$tbody.tr, {
+  }), lastColumnRender && _react["default"].createElement("th", lastColumnHeaderProp, lastColumnLabel))), _react["default"].createElement("tbody", addProps === null || addProps === void 0 ? void 0 : addProps.tBody, data.map(function (d, index1) {
+    return _react["default"].createElement("tr", _extends({
       key: "trIndex-".concat(index1)
-    }), firstColumnRender && /*#__PURE__*/_react["default"].createElement("td", null, firstColumnRender(d)), columns.map(function (col, index2) {
-      return /*#__PURE__*/_react["default"].createElement("td", {
+    }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow), firstColumnRender && _react["default"].createElement("td", null, firstColumnRender(d, index1)), columns.map(function (col, index2) {
+      return _react["default"].createElement("td", _extends({
         key: "index-".concat(index2)
-      }, renderData(d[col.value], col, columnRender));
-    }), lastColumnRender && /*#__PURE__*/_react["default"].createElement("td", null, lastColumnRender(d)));
+      }, addProps === null || addProps === void 0 ? void 0 : addProps.tData, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tData) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tData(d[col.value], col, index2, d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tData), renderData(d[col.value], col, index2, d, index1, columnRender));
+    }), lastColumnRender && _react["default"].createElement("td", null, lastColumnRender(d, index1)));
   })));
 }
 
-TestComponent.propTypes = {
-  tableProp: _propTypes["default"].object,
-  data: _propTypes["default"].arrayOf(_propTypes["default"].object),
-  setData: _propTypes["default"].func,
-  setColumns: _propTypes["default"].func,
-  sortIconAsc: _propTypes["default"].node,
-  sortIconDesc: _propTypes["default"].node,
-  dateColumns: _propTypes["default"].arrayOf(_propTypes["default"].object),
-  noSortColumns: _propTypes["default"].arrayOf(_propTypes["default"].string),
-  firstColumnRender: _propTypes["default"].func,
-  firstColumnLabel: _propTypes["default"].string,
-  firstColumnProp: _propTypes["default"].object,
-  lastColumnRender: _propTypes["default"].func,
-  lastColumnLabel: _propTypes["default"].string,
-  columnRender: _propTypes["default"].arrayOf(_propTypes["default"].object),
+SortableTable.propTypes = {
+  data: _propTypes["default"].arrayOf(_propTypes["default"].object).isRequired,
+  setData: _propTypes["default"].func.isRequired,
   columns: _propTypes["default"].arrayOf(function (propValue, key, componentName, location, propFullName) {
-    console.log(propValue);
-    console.log(key);
+    if (propValue === undefined || propValue === null) {
+      return new Error('"columns" prop is required');
+    }
 
     if (_typeof(propValue[key]) !== 'object') {
-      return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "Columns" prop should be an array of object with "value" and "label" property.');
+      return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "columns" prop should be an array of object with "value" and "label" property.');
     }
 
     if (propValue[key].value === undefined || propValue[key].label === undefined) {
-      return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "Columns" prop should be an array of object with "value" and "label" property.');
+      return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "columns" prop should be an array of object with "value" and "label" property.');
     }
-  })
+
+    if (typeof propValue[key].value !== 'string' || typeof propValue[key].label !== 'string') {
+      return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "value" and "label" property must be a string.');
+    }
+  }),
+  setColumns: _propTypes["default"].func.isRequired,
+  sortIconAsc: _propTypes["default"].node,
+  sortIconDesc: _propTypes["default"].node,
+  dateColumns: _propTypes["default"].arrayOf(_propTypes["default"].string),
+  noSortColumns: _propTypes["default"].arrayOf(_propTypes["default"].string),
+  firstColumnRender: _propTypes["default"].func,
+  firstColumnLabel: _propTypes["default"].string,
+  firstColumnHeaderProps: _propTypes["default"].object,
+  lastColumnRender: _propTypes["default"].func,
+  lastColumnLabel: _propTypes["default"].string,
+  lastColumnHeaderProps: _propTypes["default"].object,
+  columnRender: _propTypes["default"].arrayOf(_propTypes["default"].object),
+  addProps: _propTypes["default"].object
 };
-var _default = TestComponent;
+var _default = SortableTable;
 exports["default"] = _default;
