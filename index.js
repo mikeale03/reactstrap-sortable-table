@@ -152,8 +152,8 @@ function SortableTable(_ref) {
     return value;
   };
 
-  return /*#__PURE__*/_react["default"].createElement(_reactBootstrap.Table, rest, /*#__PURE__*/_react["default"].createElement("thead", addProps === null || addProps === void 0 ? void 0 : addProps.tHead, /*#__PURE__*/_react["default"].createElement("tr", addProps === null || addProps === void 0 ? void 0 : addProps.tHeadRow, firstColumnRender && /*#__PURE__*/_react["default"].createElement("th", firstColumnHeaderProp, firstColumnLabel), columns.map(function (col, index) {
-    return /*#__PURE__*/_react["default"].createElement("th", _extends({
+  return _react["default"].createElement(_reactBootstrap.Table, rest, _react["default"].createElement("thead", addProps === null || addProps === void 0 ? void 0 : addProps.tHead, _react["default"].createElement("tr", addProps === null || addProps === void 0 ? void 0 : addProps.tHeadRow, firstColumnRender && _react["default"].createElement("th", firstColumnHeaderProp, firstColumnLabel), columns.map(function (col, index) {
+    return _react["default"].createElement("th", _extends({
       onClick: function onClick() {
         return sortByColumn(col.value);
       },
@@ -161,34 +161,23 @@ function SortableTable(_ref) {
       style: {
         cursor: 'pointer'
       }
-    }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tHeading) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tHeading(col, index) : addProps === null || addProps === void 0 ? void 0 : addProps.tHeading), col.label, !noSortColumns.includes(col.value) && /*#__PURE__*/_react["default"].createElement("span", {
+    }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tHeading) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tHeading(col, index) : addProps === null || addProps === void 0 ? void 0 : addProps.tHeading), col.label, !noSortColumns.includes(col.value) && _react["default"].createElement("span", {
       className: "ms-1"
     }, col.sortOrder === undefined ? sortIconAsc || '↓' : col.sortOrder === 'desc' ? sortIconAsc || '↓' : sortIconDesc || '↑'));
-  }), lastColumnRender && /*#__PURE__*/_react["default"].createElement("th", lastColumnHeaderProp, lastColumnLabel))), /*#__PURE__*/_react["default"].createElement("tbody", addProps === null || addProps === void 0 ? void 0 : addProps.tBody, data.map(function (d, index1) {
-    return /*#__PURE__*/_react["default"].createElement("tr", _extends({
+  }), lastColumnRender && _react["default"].createElement("th", lastColumnHeaderProp, lastColumnLabel))), _react["default"].createElement("tbody", addProps === null || addProps === void 0 ? void 0 : addProps.tBody, data.map(function (d, index1) {
+    return _react["default"].createElement("tr", _extends({
       key: "trIndex-".concat(index1)
-    }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow), firstColumnRender && /*#__PURE__*/_react["default"].createElement("td", null, firstColumnRender(d, index1)), columns.map(function (col, index2) {
-      return /*#__PURE__*/_react["default"].createElement("td", _extends({
+    }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow), firstColumnRender && _react["default"].createElement("td", null, firstColumnRender(d, index1)), columns.map(function (col, index2) {
+      return _react["default"].createElement("td", _extends({
         key: "index-".concat(index2)
       }, addProps === null || addProps === void 0 ? void 0 : addProps.tData, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tData) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tData(d[col.value], col, index2, d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tData), renderData(d[col.value], col, index2, d, index1, columnRender));
-    }), lastColumnRender && /*#__PURE__*/_react["default"].createElement("td", null, lastColumnRender(d, index1)));
+    }), lastColumnRender && _react["default"].createElement("td", null, lastColumnRender(d, index1)));
   })));
 }
 
 SortableTable.propTypes = {
-  /**
-   An array of data objects. Must be a react state.
-  */
   data: _propTypes["default"].arrayOf(_propTypes["default"].object).isRequired,
-
-  /**
-   A Setter function. Must be a setter for 'data' state.
-  */
   setData: _propTypes["default"].func.isRequired,
-
-  /**
-    An array of objects. Use as table columns. Must be a react state. Objects must contain 'value' and 'label' properties
-  */
   columns: _propTypes["default"].arrayOf(function (propValue, key, componentName, location, propFullName) {
     if (propValue === undefined || propValue === null) {
       return new Error('"columns" prop is required');
@@ -206,85 +195,18 @@ SortableTable.propTypes = {
       return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "value" and "label" property must be a string.');
     }
   }),
-
-  /**
-    A Setter function. Must be a setter for 'columns' state.
-  */
   setColumns: _propTypes["default"].func.isRequired,
-
-  /**
-    Icon use to sort as ascending. Could be a component, element or text.
-  */
   sortIconAsc: _propTypes["default"].node,
-
-  /**
-    Icon use to sort as descending. Could be a component, element or text.
-  */
   sortIconDesc: _propTypes["default"].node,
-
-  /**
-    Specify if the columns data is a Date in order to properly sort the data. This should contain strings which represent the property of the objects.
-  */
   dateColumns: _propTypes["default"].arrayOf(_propTypes["default"].string),
-
-  /**
-    Specify the columns that you dont want to be sorted. This should contain strings which represent the property of the objects.
-  */
   noSortColumns: _propTypes["default"].arrayOf(_propTypes["default"].string),
-
-  /**
-    A callback function if you want to render additional element in the first column
-  */
   firstColumnRender: _propTypes["default"].func,
-
-  /**
-    A label for first column. 'firstColumnRender' should be defined for this to be visible.
-  */
   firstColumnLabel: _propTypes["default"].string,
-
-  /**
-    Add props to first column rendered by firstColumnRender callback
-  */
   firstColumnHeaderProps: _propTypes["default"].object,
-
-  /**
-   A callback function if you want to render additional element in the last column
-  */
   lastColumnRender: _propTypes["default"].func,
-
-  /**
-    A label for last column. 'lastColumnRender' should be defined for this to be visible.
-  */
   lastColumnLabel: _propTypes["default"].string,
-
-  /**
-    Add props to last column header rendered by lastColumnRender callback
-  */
   lastColumnHeaderProps: _propTypes["default"].object,
-
-  /**
-    A callback function if you want a custom rendered element within a column.
-  
-    eg: 
-    { 
-      column: 'header2',
-      render: (data) => 
-        <CustomButton>{ data }</CustomButton> 
-    } 
-  */
   columnRender: _propTypes["default"].arrayOf(_propTypes["default"].object),
-
-  /**
-    Use for adding props for Table inner components like 'tr' and 'td'.
-      valid props are: 
-    { tHeadRow: { prop: 'value'} }
-    { tBodyRow: { prop: 'value'} }
-    { tHeading: { prop: 'value'} }
-    { tData: { prop: 'value'} }
-    { tHeading: (data) => ({prop: 'value'}) }
-    { tBodyRow: (data) => ({prop: 'value'}) }
-    { tData: (data) => ({prop: 'value'}) }
-   */
   addProps: _propTypes["default"].object
 };
 var _default = SortableTable;
