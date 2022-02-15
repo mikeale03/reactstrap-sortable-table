@@ -1,2 +1,2 @@
-import SortableTable from './stories/Table'
+import SortableTable from './components/Table'
 export default SortableTable

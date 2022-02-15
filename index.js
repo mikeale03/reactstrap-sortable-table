@@ -5,24 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var _Table = _interopRequireDefault(require("./stories/Table"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var _default = _Table["default"];
-exports["default"] = _default;
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-
 var _react = _interopRequireDefault(require("react"));
 
 var _reactBootstrap = require("react-bootstrap");
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
+
+var _excluded = ["data", "setData", "columns", "setColumns", "sortIconAsc", "sortIconDesc", "dateColumns", "noSortColumns", "firstColumnRender", "firstColumnLabel", "firstColumnHeaderProp", "lastColumnRender", "lastColumnLabel", "lastColumnHeaderProp", "columnRender", "addProps"];
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -42,12 +31,12 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function SortableTable(_ref) {
-  var _tableProps$thead;
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
-  var _ref$tableProps = _ref.tableProps,
-      tableProps = _ref$tableProps === void 0 ? {} : _ref$tableProps,
-      _ref$data = _ref.data,
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function SortableTable(_ref) {
+  var _ref$data = _ref.data,
       data = _ref$data === void 0 ? [] : _ref$data,
       _ref$setData = _ref.setData,
       setData = _ref$setData === void 0 ? function () {} : _ref$setData,
@@ -63,12 +52,16 @@ function SortableTable(_ref) {
       noSortColumns = _ref$noSortColumns === void 0 ? [] : _ref$noSortColumns,
       firstColumnRender = _ref.firstColumnRender,
       firstColumnLabel = _ref.firstColumnLabel,
-      _ref$firstColumnProp = _ref.firstColumnProp,
-      firstColumnProp = _ref$firstColumnProp === void 0 ? {} : _ref$firstColumnProp,
+      _ref$firstColumnHeade = _ref.firstColumnHeaderProp,
+      firstColumnHeaderProp = _ref$firstColumnHeade === void 0 ? {} : _ref$firstColumnHeade,
       lastColumnRender = _ref.lastColumnRender,
       lastColumnLabel = _ref.lastColumnLabel,
+      _ref$lastColumnHeader = _ref.lastColumnHeaderProp,
+      lastColumnHeaderProp = _ref$lastColumnHeader === void 0 ? {} : _ref$lastColumnHeader,
       _ref$columnRender = _ref.columnRender,
-      columnRender = _ref$columnRender === void 0 ? [] : _ref$columnRender;
+      columnRender = _ref$columnRender === void 0 ? [] : _ref$columnRender,
+      addProps = _ref.addProps,
+      rest = _objectWithoutProperties(_ref, _excluded);
 
   var sortByColumn = function sortByColumn(columnName) {
     var isDate = dateColumns.includes(columnName);
@@ -149,18 +142,18 @@ function SortableTable(_ref) {
     }
   };
 
-  var renderData = function renderData(data, column, columnRender) {
+  var renderData = function renderData(value, column, columnIndex, data, dataIndex, columnRender) {
     for (var i = 0; i < columnRender.length; i++) {
       if (column.value === columnRender[i].column) {
-        return columnRender[i].render(data);
+        return columnRender[i].render(value, column, columnIndex, data, dataIndex);
       }
     }
 
-    return data;
+    return value;
   };
 
-  return /*#__PURE__*/_react["default"].createElement(_reactBootstrap.Table, tableProps, /*#__PURE__*/_react["default"].createElement("thead", tableProps === null || tableProps === void 0 ? void 0 : tableProps.thead, /*#__PURE__*/_react["default"].createElement("tr", tableProps === null || tableProps === void 0 ? void 0 : (_tableProps$thead = tableProps.thead) === null || _tableProps$thead === void 0 ? void 0 : _tableProps$thead.tr, firstColumnRender && /*#__PURE__*/_react["default"].createElement("th", firstColumnProp, firstColumnLabel), columns.map(function (col, index) {
-    return /*#__PURE__*/_react["default"].createElement("th", {
+  return /*#__PURE__*/_react["default"].createElement(_reactBootstrap.Table, rest, /*#__PURE__*/_react["default"].createElement("thead", addProps === null || addProps === void 0 ? void 0 : addProps.tHead, /*#__PURE__*/_react["default"].createElement("tr", addProps === null || addProps === void 0 ? void 0 : addProps.tHeadRow, firstColumnRender && /*#__PURE__*/_react["default"].createElement("th", firstColumnHeaderProp, firstColumnLabel), columns.map(function (col, index) {
+    return /*#__PURE__*/_react["default"].createElement("th", _extends({
       onClick: function onClick() {
         return sortByColumn(col.value);
       },
@@ -168,40 +161,38 @@ function SortableTable(_ref) {
       style: {
         cursor: 'pointer'
       }
-    }, col.label, !noSortColumns.includes(col.value) && /*#__PURE__*/_react["default"].createElement("span", {
+    }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tHeading) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tHeading(col, index) : addProps === null || addProps === void 0 ? void 0 : addProps.tHeading), col.label, !noSortColumns.includes(col.value) && /*#__PURE__*/_react["default"].createElement("span", {
       className: "ms-1"
     }, col.sortOrder === undefined ? sortIconAsc || '↓' : col.sortOrder === 'desc' ? sortIconAsc || '↓' : sortIconDesc || '↑'));
-  }), lastColumnRender && /*#__PURE__*/_react["default"].createElement("th", null, lastColumnLabel))), /*#__PURE__*/_react["default"].createElement("tbody", tableProps === null || tableProps === void 0 ? void 0 : tableProps.tbody, data.map(function (d, index1) {
-    var _tableProps$tbody;
-
-    return /*#__PURE__*/_react["default"].createElement("tr", _extends({}, tableProps === null || tableProps === void 0 ? void 0 : (_tableProps$tbody = tableProps.tbody) === null || _tableProps$tbody === void 0 ? void 0 : _tableProps$tbody.tr, {
+  }), lastColumnRender && /*#__PURE__*/_react["default"].createElement("th", lastColumnHeaderProp, lastColumnLabel))), /*#__PURE__*/_react["default"].createElement("tbody", addProps === null || addProps === void 0 ? void 0 : addProps.tBody, data.map(function (d, index1) {
+    return /*#__PURE__*/_react["default"].createElement("tr", _extends({
       key: "trIndex-".concat(index1)
-    }), firstColumnRender && /*#__PURE__*/_react["default"].createElement("td", null, firstColumnRender(d)), columns.map(function (col, index2) {
-      return /*#__PURE__*/_react["default"].createElement("td", {
+    }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow), firstColumnRender && /*#__PURE__*/_react["default"].createElement("td", null, firstColumnRender(d, index1)), columns.map(function (col, index2) {
+      return /*#__PURE__*/_react["default"].createElement("td", _extends({
         key: "index-".concat(index2)
-      }, renderData(d[col.value], col, columnRender));
-    }), lastColumnRender && /*#__PURE__*/_react["default"].createElement("td", null, lastColumnRender(d)));
+      }, addProps === null || addProps === void 0 ? void 0 : addProps.tData, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tData) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tData(d[col.value], col, index2, d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tData), renderData(d[col.value], col, index2, d, index1, columnRender));
+    }), lastColumnRender && /*#__PURE__*/_react["default"].createElement("td", null, lastColumnRender(d, index1)));
   })));
 }
 
 SortableTable.propTypes = {
-  tableProps: _propTypes["default"].object,
-  data: _propTypes["default"].arrayOf(_propTypes["default"].object),
-  setData: _propTypes["default"].func,
-  setColumns: _propTypes["default"].func,
-  sortIconAsc: _propTypes["default"].node,
-  sortIconDesc: _propTypes["default"].node,
-  dateColumns: _propTypes["default"].arrayOf(_propTypes["default"].object),
-  noSortColumns: _propTypes["default"].arrayOf(_propTypes["default"].string),
-  firstColumnRender: _propTypes["default"].func,
-  firstColumnLabel: _propTypes["default"].string,
-  firstColumnProp: _propTypes["default"].object,
-  lastColumnRender: _propTypes["default"].func,
-  lastColumnLabel: _propTypes["default"].string,
-  columnRender: _propTypes["default"].arrayOf(_propTypes["default"].object),
+  /**
+   An array of data objects. Must be a react state.
+  */
+  data: _propTypes["default"].arrayOf(_propTypes["default"].object).isRequired,
+
+  /**
+   A Setter function. Must be a setter for 'data' state.
+  */
+  setData: _propTypes["default"].func.isRequired,
+
+  /**
+    An array of objects. Use as table columns. Must be a react state. Objects must contain 'value' and 'label' properties
+  */
   columns: _propTypes["default"].arrayOf(function (propValue, key, componentName, location, propFullName) {
-    console.log(propValue);
-    console.log(key);
+    if (propValue === undefined || propValue === null) {
+      return new Error('"columns" prop is required');
+    }
 
     if (_typeof(propValue[key]) !== 'object') {
       return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "columns" prop should be an array of object with "value" and "label" property.');
@@ -210,44 +201,91 @@ SortableTable.propTypes = {
     if (propValue[key].value === undefined || propValue[key].label === undefined) {
       return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "columns" prop should be an array of object with "value" and "label" property.');
     }
-  })
+
+    if (typeof propValue[key].value !== 'string' || typeof propValue[key].label !== 'string') {
+      return new Error('Invalid prop `' + propFullName + '` supplied to' + ' `' + componentName + '`. "value" and "label" property must be a string.');
+    }
+  }),
+
+  /**
+    A Setter function. Must be a setter for 'columns' state.
+  */
+  setColumns: _propTypes["default"].func.isRequired,
+
+  /**
+    Icon use to sort as ascending. Could be a component, element or text.
+  */
+  sortIconAsc: _propTypes["default"].node,
+
+  /**
+    Icon use to sort as descending. Could be a component, element or text.
+  */
+  sortIconDesc: _propTypes["default"].node,
+
+  /**
+    Specify if the columns data is a Date in order to properly sort the data. This should contain strings which represent the property of the objects.
+  */
+  dateColumns: _propTypes["default"].arrayOf(_propTypes["default"].string),
+
+  /**
+    Specify the columns that you dont want to be sorted. This should contain strings which represent the property of the objects.
+  */
+  noSortColumns: _propTypes["default"].arrayOf(_propTypes["default"].string),
+
+  /**
+    A callback function if you want to render additional element in the first column
+  */
+  firstColumnRender: _propTypes["default"].func,
+
+  /**
+    A label for first column. 'firstColumnRender' should be defined for this to be visible.
+  */
+  firstColumnLabel: _propTypes["default"].string,
+
+  /**
+    Add props to first column rendered by firstColumnRender callback
+  */
+  firstColumnHeaderProps: _propTypes["default"].object,
+
+  /**
+   A callback function if you want to render additional element in the last column
+  */
+  lastColumnRender: _propTypes["default"].func,
+
+  /**
+    A label for last column. 'lastColumnRender' should be defined for this to be visible.
+  */
+  lastColumnLabel: _propTypes["default"].string,
+
+  /**
+    Add props to last column header rendered by lastColumnRender callback
+  */
+  lastColumnHeaderProps: _propTypes["default"].object,
+
+  /**
+    A callback function if you want a custom rendered element within a column.
+  
+    eg: 
+    { 
+      column: 'header2',
+      render: (data) => 
+        <CustomButton>{ data }</CustomButton> 
+    } 
+  */
+  columnRender: _propTypes["default"].arrayOf(_propTypes["default"].object),
+
+  /**
+    Use for adding props for Table inner components like 'tr' and 'td'.
+      valid props are: 
+    { tHeadRow: { prop: 'value'} }
+    { tBodyRow: { prop: 'value'} }
+    { tHeading: { prop: 'value'} }
+    { tData: { prop: 'value'} }
+    { tHeading: (data) => ({prop: 'value'}) }
+    { tBodyRow: (data) => ({prop: 'value'}) }
+    { tData: (data) => ({prop: 'value'}) }
+   */
+  addProps: _propTypes["default"].object
 };
 var _default = SortableTable;
 exports["default"] = _default;
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = exports.Columns = void 0;
-
-var _Table = _interopRequireDefault(require("./Table"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var _default = {
-  title: "Table",
-  component: _Table["default"]
-};
-exports["default"] = _default;
-var columns = [{
-  value: header1,
-  label: 'HEADER 1'
-}, {
-  value: header2,
-  label: 'HEADER 2'
-}, {
-  value: header3,
-  label: 'HEADER 3'
-}, {
-  value: header4,
-  label: 'HEADER 4'
-}];
-
-var Columns = function Columns() {
-  return /*#__PURE__*/React.createElement(_Table["default"], {
-    columns: columns
-  });
-};
-
-exports.Columns = Columns;
