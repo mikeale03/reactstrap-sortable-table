@@ -216,6 +216,9 @@ SortableTable.propTypes = {
 
   /**
     A callback function if you want to render additional element in the first column
+
+    eg:
+      (data, index) => <Component> display something... </Component>
   */
   firstColumnRender: PropTypes.func,
 
@@ -231,6 +234,9 @@ SortableTable.propTypes = {
 
    /**
     A callback function if you want to render additional element in the last column
+
+    eg:
+      (data, index) => <Component> display something... </Component>
   */
   lastColumnRender: PropTypes.func,
 
@@ -245,29 +251,57 @@ SortableTable.propTypes = {
   lastColumnHeaderProps: PropTypes.object,
 
   /**
-    A callback function if you want a custom rendered element within a column.
+    An array of objects specifying a column value and a render callback function if you want a custom rendered element within a column.
   
     eg: 
-    { 
-      column: 'header2',
-      render: (data) => 
-        <CustomButton>{ data }</CustomButton> 
-    } 
+    [
+      { 
+        column: 'header2',
+        render: (value, column, columnIndex, data, dataIndex) => 
+          <Component> something... </Component> 
+      },
+      { 
+        column: 'header4',
+        render: (value, column, columnIndex, data, dataIndex) => 
+          <Component> another something... </Component> 
+      },
+    ] 
   */
   columnRender: PropTypes.arrayOf(PropTypes.object),
 
   /**
     Use for adding props for Table inner components like 'tr' and 'td'.
 
-    valid props are: 
-    { tHeadRow: { prop: 'value'} }
-    { tBodyRow: { prop: 'value'} }
-    { tHeading: { prop: 'value'} }
-    { tData: { prop: 'value'} }
-    { tHeading: (data) => ({prop: 'value'}) }
-    { tBodyRow: (data) => ({prop: 'value'}) }
-    { tData: (data) => ({prop: 'value'}) }
-   */
+    eg. of valid props are: 
+    { 
+      tHeadRow: { prop: 'value'} 
+    }
+    --
+    { 
+      tBodyRow: { prop: 'value'} 
+    }
+    --
+    { 
+      tHeading: { prop: 'value'} 
+    }
+    --
+    { 
+      tData: { prop: 'value'} 
+    }
+    --
+    { 
+      tHeading: (column, columnIndex) => ({prop: 'value'}) 
+    }
+    --
+    { 
+      tBodyRow: (data, index) => ({prop: 'value'}) 
+    }
+    --
+    { 
+      tData: (value, column, columnIndex, data, dataIndex) => 
+        ({prop: 'value'}) 
+    }
+  */
   addProps:PropTypes.object
 
 }
