@@ -12,7 +12,7 @@ npm install reactstrap-sortable-table
 
 ## Peer Dependencies
 
-This package needs this libraries to installed.
+This package needs this libraries to be installed.
 
 ```bash
 "peerDependencies": {
@@ -63,6 +63,8 @@ function Component() {
 export default Component;
 
 ```
+## Documentation
+Check the **[props documentation](https://mikeale03.github.io/reactstrap-sortable-table/?path=/story/sortable-table--sample-table)** for more information
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
