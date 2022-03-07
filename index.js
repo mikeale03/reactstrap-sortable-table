@@ -64,6 +64,8 @@ var initColumns = function initColumns(data) {
     });
     return columns;
   }
+
+  return [];
 };
 
 var sorter = function sorter(isAsc, columnName, isDate) {
