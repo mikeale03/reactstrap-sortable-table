@@ -33,13 +33,6 @@ import React, { useState } from 'react';
 
 function Component() {
 
-  const [columns, setColumns] = useState([
-    {value: 'header1', label: 'HEADER 1' },
-    {value: 'header2', label: 'HEADER 2' },
-    {value: 'header3', label: 'HEADER 3' },
-    {value: 'header4', label: 'HEADER 4' },
-  ])
-
   const [data, setData] = useState([
     {header1: 'Michael', header2: 'James', header3: 'Tran', header4: 'Hill'},
     {header1: 'Jack', header2: 'Cole', header3: 'Naix', header4: 'Sia'},
@@ -51,8 +44,6 @@ function Component() {
   return (
 
      <SortableTable 
-       columns={columns}
-       setColumns={setColumns}
        data={data}
        setData={setData}
      />
