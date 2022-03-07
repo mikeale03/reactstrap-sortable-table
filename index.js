@@ -54,7 +54,7 @@ var toTitleCase = function toTitleCase(text) {
 };
 
 var initColumns = function initColumns(data) {
-  if (data.length) {
+  if (data !== null && data !== void 0 && data.length) {
     var firstItem = data[0];
     var columns = Object.keys(firstItem).map(function (prop) {
       return {
