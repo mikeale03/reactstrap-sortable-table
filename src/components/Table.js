@@ -7,7 +7,7 @@ const toTitleCase = (text) =>
 
 
 const initColumns = (data) => {
-  if(data.length) {
+  if(data?.length) {
     const firstItem = data[0]
     const columns = Object.keys(firstItem).map( prop => {
       return {
@@ -137,7 +137,7 @@ function SortableTable({
       </thead>
       <tbody {...addProps?.tBody}>
 
-        { data.map( (d, index1) =>
+        { data && data.map( (d, index1) =>
         <tr key={`trIndex-${d.id || index1}`} {...(typeof addProps?.tBodyRow === 'function' ? addProps?.tBodyRow(d, index1) : addProps?.tBodyRow)}>
           
           { firstColumnRender &&

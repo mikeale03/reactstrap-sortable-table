@@ -108,8 +108,7 @@ var renderData = function renderData(value, column, columnIndex, data, dataIndex
 };
 
 function SortableTable(_ref) {
-  var _ref$data = _ref.data,
-      data = _ref$data === void 0 ? [] : _ref$data,
+  var data = _ref.data,
       _ref$setData = _ref.setData,
       setData = _ref$setData === void 0 ? function () {} : _ref$setData,
       columns = _ref.columns,
@@ -151,7 +150,7 @@ function SortableTable(_ref) {
       var c = initColumns(data);
       setCols(c);
     }
-  }, [columns]);
+  }, [columns, data]);
 
   var sortByColumn = function sortByColumn(columnName) {
     var isDate = dateColumns.includes(columnName);
@@ -190,7 +189,7 @@ function SortableTable(_ref) {
     }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tHeading) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tHeading(col, index) : addProps === null || addProps === void 0 ? void 0 : addProps.tHeading), col.label, isSortable && !noSortColumns.includes(col.value) && _react["default"].createElement("span", {
       className: "ms-1"
     }, col.sortOrder === undefined ? sortIconAsc || '↓' : col.sortOrder === 'desc' ? sortIconAsc || '↓' : sortIconDesc || '↑'));
-  }), lastColumnRender && _react["default"].createElement("th", lastColumnHeaderProp, lastColumnLabel))), _react["default"].createElement("tbody", addProps === null || addProps === void 0 ? void 0 : addProps.tBody, data.map(function (d, index1) {
+  }), lastColumnRender && _react["default"].createElement("th", lastColumnHeaderProp, lastColumnLabel))), _react["default"].createElement("tbody", addProps === null || addProps === void 0 ? void 0 : addProps.tBody, data && data.map(function (d, index1) {
     return _react["default"].createElement("tr", _extends({
       key: "trIndex-".concat(d.id || index1)
     }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow), firstColumnRender && _react["default"].createElement("td", _extends({}, addProps === null || addProps === void 0 ? void 0 : addProps.firstColumn, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.firstColumn) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.firstColumn(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.firstColumn), firstColumnRender(d, index1)), cols.map(function (col, index2) {

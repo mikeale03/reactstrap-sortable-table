@@ -10,24 +10,24 @@ export default {
 
 export const SampleTable = () => {
 
-    const [data, setData] = useState([
-        {
-            headerOne: 'Jack21', headerTwo: 4486, headerThree: '10/12/2001', headerFour: 'Kigz'
-        },
-        {
-            headerOne: 'Jack12', headerTwo: 5896, headerThree: '12/12/2000', headerFour: 'W3Schools'
-        },
-        {
-            headerOne: 'Cole', headerTwo: 348, headerThree: '9/12/2000', headerFour: 'Jake'
-        },
-        {
-            headerOne: 'Hugh', headerTwo: 452, headerThree: '1/12/2011', headerFour: 'Mike'
-        },
-        {
-            headerOne: 'Ryan', headerTwo: 467, headerThree: '1/12/2011', headerFour: 'Ale'
-        },
-    ])
-    //let data;
+    // const [data, setData] = useState([
+    //     {
+    //         headerOne: 'Jack21', headerTwo: 4486, headerThree: '10/12/2001', headerFour: 'Kigz'
+    //     },
+    //     {
+    //         headerOne: 'Jack12', headerTwo: 5896, headerThree: '12/12/2000', headerFour: 'W3Schools'
+    //     },
+    //     {
+    //         headerOne: 'Cole', headerTwo: 348, headerThree: '9/12/2000', headerFour: 'Jake'
+    //     },
+    //     {
+    //         headerOne: 'Hugh', headerTwo: 452, headerThree: '1/12/2011', headerFour: 'Mike'
+    //     },
+    //     {
+    //         headerOne: 'Ryan', headerTwo: 467, headerThree: '1/12/2011', headerFour: 'Ale'
+    //     },
+    // ])
+    let data;
 
     return (
         <SortableTable 
