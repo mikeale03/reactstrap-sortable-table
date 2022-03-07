@@ -86,7 +86,7 @@ function SortableTable({
       const c = initColumns(data)
       setCols(c)
     }
-  }, [columns])
+  }, [columns, data])
 
   const sortByColumn = (columnName) => {
 
