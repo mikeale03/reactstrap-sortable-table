@@ -17,6 +17,7 @@ const initColumns = (data) => {
     })
     return columns
   }
+  return []
 }
 
 const sorter = (isAsc, columnName, isDate) => {
