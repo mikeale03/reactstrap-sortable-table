@@ -10,40 +10,21 @@ export default {
 
 export const SampleTable = () => {
 
-    const [columns, setColumns] = useState([
-        {
-            value: 'header1',
-            label: 'HEADER 1'
-        },
-        {
-            value: 'header2',
-            label: 'HEADER 2'
-        },
-        {
-            value: 'header3',
-            label: 'HEADER 3'
-        },
-        {
-            value: 'header4',
-            label: 'HEADER 4'
-        },
-    ])
-
     const [data, setData] = useState([
         {
-            header1: 'Jack21', header2: 4486, header3: '10/12/2001', header4: 'Kigz'
+            headerOne: 'Jack21', headerTwo: 4486, headerThree: '10/12/2001', headerFour: 'Kigz'
         },
         {
-            header1: 'Jack12', header2: 5896, header3: '12/12/2000', header4: 'W3Schools'
+            headerOne: 'Jack12', headerTwo: 5896, headerThree: '12/12/2000', headerFour: 'W3Schools'
         },
         {
-            header1: 'Cole', header2: 348, header3: '9/12/2000', header4: 'Jake'
+            headerOne: 'Cole', headerTwo: 348, headerThree: '9/12/2000', headerFour: 'Jake'
         },
         {
-            header1: 'Hugh', header2: 452, header3: '1/12/2011', header4: 'Mike'
+            headerOne: 'Hugh', headerTwo: 452, headerThree: '1/12/2011', headerFour: 'Mike'
         },
         {
-            header1: 'Ryan', header2: 467, header3: '1/12/2011', header4: 'Ale'
+            headerOne: 'Ryan', headerTwo: 467, headerThree: '1/12/2011', headerFour: 'Ale'
         },
     ])
 
@@ -53,8 +34,6 @@ export const SampleTable = () => {
             striped
             data={data}
             setData={setData}
-            columns={columns}
-            setColumns={setColumns}
             dateColumns={['header3']}
             noSortColumns={['header4']}
 
@@ -68,7 +47,7 @@ export const SampleTable = () => {
             lastColumnRender={(data, index) => {
                 return index % 2 === 0 ? 
                 <div className="d-flex justify-content align-items-center flex-column">
-                    <Button>{data.header1}</Button>
+                    <Button>{data.headerOne}</Button>
                 </div>
                  : 
                 undefined
@@ -89,7 +68,8 @@ export const SampleTable = () => {
                 {
                     tBodyRow: (data, index) => index % 2 && {className: 'text-primary'},
                     tData: (value, column, columnIndex, data, dataIndex) => value === 'jake' && {className: 'text-success'},
-                    tHeading: (column, columnIndex) => column.value === 'header2' && {className: 'text-success'}
+                    tHeading: (column, columnIndex) => column.value === 'header2' && {className: 'text-success'},
+                    firstColumn: ({className: 'bg-success'})
                 }
             }
         />

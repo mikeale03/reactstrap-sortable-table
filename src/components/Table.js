@@ -1,12 +1,60 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'react-bootstrap'
 import PropTypes from 'prop-types';
+
+const toTitleCase = (text) => 
+  text.replace(/([A-Z])/g, " $1").replace(/^./, (match) => match.toUpperCase())
+
+
+const initColumns = (data) => {
+  if(data.length) {
+    const firstItem = data[0]
+    const columns = Object.keys(firstItem).map( prop => {
+      return {
+        value: prop,
+        label: toTitleCase(prop)
+      }
+    })
+    return columns
+  }
+}
+
+const sorter = (isAsc, columnName, isDate) => {
+  return (a, b) => {
+    
+    if(isDate) 
+      return isAsc ? new Date(a[columnName]) - new Date(b[columnName]) : new Date(b[columnName]) - new Date(a[columnName])
+  
+    const isNumber = (v) => (+v).toString() === v
+    const aPart = a[columnName] ? a[columnName].toString().match(/\d+|\D+/g) : ''
+    const bPart = b[columnName] ? b[columnName].toString().match(/\d+|\D+/g): ''
+    let i = 0; let len = Math.min(aPart.length, bPart.length)
+    while (i < len && aPart[i] === bPart[i]) { 
+        i++
+    }
+    if (i === len) {
+          return isAsc ? (aPart.length - bPart.length) : (bPart.length - aPart.length)
+    }
+    if (isNumber(aPart[i]) && isNumber(bPart[i])) {
+       return isAsc ? (aPart[i] - bPart[i]) : (bPart[i] - aPart[i])
+    }
+    return isAsc ? aPart[i].localeCompare(bPart[i]) : bPart[i].localeCompare(aPart[i])
+  }
+}
+
+const renderData = function(value, column, columnIndex, data, dataIndex, columnRender) {
+  for(let i=0; i < columnRender.length; i++) {
+    if(column.value === columnRender[i].column) {
+        return columnRender[i].render(value, column, columnIndex, data, dataIndex)
+    }
+  }
+  return value
+}
 
 function SortableTable({
   data = [],
   setData = () => {},
-  columns = [],
-  setColumns = () => {},
+  columns,
   sortIconAsc,
   sortIconDesc,
   dateColumns = [],
@@ -19,74 +67,43 @@ function SortableTable({
   lastColumnHeaderProp = {},
   columnRender = [],
   addProps,
+  isSortable = true,
   ...rest
 }) {
+
+  const [cols, setCols] = useState([])
+
+  useEffect(() => {
+    if(columns) {
+      setCols(columns.map( col =>
+        typeof col === 'string' ?
+          { value: col, label: toTitleCase(col) } :
+          col        
+      ))
+
+    } else {
+      const c = initColumns(data)
+      setCols(c)
+    }
+  }, [columns])
 
   const sortByColumn = (columnName) => {
 
     const isDate = dateColumns.includes(columnName)
-
-    const sorterAsc = (a, b) => {
-        if(isDate) return new Date(a[columnName]) - new Date(b[columnName])
-
-        const isNumber = (v) => (+v).toString() === v
-        const aPart = a[columnName] ? a[columnName].toString().match(/\d+|\D+/g) : ''
-        const bPart = b[columnName] ? b[columnName].toString().match(/\d+|\D+/g): ''
-        let i = 0; let len = Math.min(aPart.length, bPart.length)
-        while (i < len && aPart[i] === bPart[i]) { 
-            i++
-        }
-        if (i === len) {
-              return aPart.length - bPart.length
-        }
-        if (isNumber(aPart[i]) && isNumber(bPart[i])) {
-           return aPart[i] - bPart[i]
-        }
-        return aPart[i].localeCompare(bPart[i])
-    }
-
-    const sorterDesc = (a, b) => {
-        if(isDate) return new Date(b[columnName]) - new Date(a[columnName])
-
-        const isNumber = (v) => (+v).toString() === v
-        const aPart = a[columnName] ? a[columnName].toString().match(/\d+|\D+/g) : ''
-        const bPart = b[columnName] ? b[columnName].toString().match(/\d+|\D+/g): ''
-        let i = 0; let len = Math.min(aPart.length, bPart.length)
-        while (i < len && aPart[i] === bPart[i]) { 
-            i++
-        }
-        if (i === len) {
-              return bPart.length - aPart.length
-        }
-        if (isNumber(aPart[i]) && isNumber(bPart[i])) {
-           return bPart[i] - aPart[i];
-        }
-        return bPart[i].localeCompare(aPart[i])
-    }
-
-    if (data.length) {
+  
+    if (isSortable && data.length) {
         if (noSortColumns.includes(columnName)) return
-
-        let _columns = columns
+  
+        let _columns = cols
         const columnIndex = _columns.findIndex(x => x.value === columnName)
         const sortOrder = _columns[columnIndex]?.sortOrder === 'asc' ? 'desc' : 'asc'
         let _data = [...data]
-        
-        _data.sort(sortOrder === 'asc' ? sorterAsc : sorterDesc)
+        _data.sort( sorter(sortOrder === 'asc', columnName, isDate) )
         setData(_data)
-
+  
         _columns[columnIndex]['sortOrder'] = sortOrder
-        setColumns(_columns)
+        setCols(_columns)
     }
-  }
-
-  const renderData = function(value, column, columnIndex, data, dataIndex, columnRender) {
-    for(let i=0; i < columnRender.length; i++) {
-      if(column.value === columnRender[i].column) {
-          return columnRender[i].render(value, column, columnIndex, data, dataIndex)
-      }
-    }
-    return value
   }
 
   return (
@@ -96,12 +113,12 @@ function SortableTable({
 
           { firstColumnRender && <th {...firstColumnHeaderProp}>{firstColumnLabel}</th> }
 
-          {columns.map((col, index) => (
-            <th onClick={() => sortByColumn(col.value)} key={`columnheader-${index}`} style={{cursor: 'pointer'}} 
+          {cols.map((col, index) => (
+            <th onClick={() => sortByColumn(col.value, data, setData, setCols, noSortColumns)} key={`columnheader-${index}`} style={{cursor: 'pointer'}}
               {...(typeof addProps?.tHeading === 'function' ? addProps?.tHeading(col, index) : addProps?.tHeading)}
             >
                 {col.label}
-                { !noSortColumns.includes(col.value) &&
+                { isSortable && !noSortColumns.includes(col.value) &&
                 <span className='ms-1' >
                   { 
                     col.sortOrder === undefined ? sortIconAsc || '↓' :
@@ -120,15 +137,15 @@ function SortableTable({
       <tbody {...addProps?.tBody}>
 
         { data.map( (d, index1) =>
-        <tr key={`trIndex-${index1}`} {...(typeof addProps?.tBodyRow === 'function' ? addProps?.tBodyRow(d, index1) : addProps?.tBodyRow)}>
+        <tr key={`trIndex-${d.id || index1}`} {...(typeof addProps?.tBodyRow === 'function' ? addProps?.tBodyRow(d, index1) : addProps?.tBodyRow)}>
           
           { firstColumnRender &&
-            <td>
+            <td {...addProps?.firstColumn} {...(typeof addProps?.firstColumn === 'function' ? addProps?.firstColumn(d, index1) : addProps?.firstColumn)}>
               {firstColumnRender(d, index1)}
             </td>
           }
 
-          { columns.map( (col, index2) =>
+          { cols.map( (col, index2) =>
             <td key={`index-${index2}`} 
               {...addProps?.tData} {...(typeof addProps?.tData === 'function' ? addProps?.tData(d[col.value], col, index2, d, index1) : addProps?.tData)}
             >
@@ -137,7 +154,7 @@ function SortableTable({
           )}
 
           { lastColumnRender &&
-            <td>
+            <td {...addProps?.lastColumn} {...(typeof addProps?.lastColumn === 'function' ? addProps?.lastColumn(d, index1) : addProps?.lastColumn)}>
               {lastColumnRender(d, index1)}
             </td>
           }
@@ -158,42 +175,28 @@ SortableTable.propTypes = {
   /**
    A Setter function. Must be a setter for 'data' state.
   */
-  setData: PropTypes.func.isRequired,
+  setData: PropTypes.func,
 
   /**
-    An array of objects. Use as table columns. Must be a react state. Objects must contain 'value' and 'label' properties
+    An array of of strings or objects. Use as table columns. If it is string, it must be a property of data objects. If it is an object, it must contain 'value' and 'label' properties
   */
    columns: PropTypes.arrayOf(function(propValue, key, componentName, location, propFullName) {
     
-    if(propValue === undefined || propValue === null) {
-      return new Error(
-        '"columns" prop is required'
-      );
-    }
-    if(typeof propValue[key] !== 'object') {
-      return new Error(
-        'Invalid prop `' + propFullName + '` supplied to' +
-        ' `' + componentName + '`. "columns" prop should be an array of object with "value" and "label" property.'
-      );
-    }
-    if (propValue[key].value === undefined || propValue[key].label === undefined) {
-      return new Error(
-        'Invalid prop `' + propFullName + '` supplied to' +
-        ' `' + componentName + '`. "columns" prop should be an array of object with "value" and "label" property.'
-      );
-    }
-    if (typeof propValue[key].value !== 'string' || typeof propValue[key].label !== 'string') {
-      return new Error(
-        'Invalid prop `' + propFullName + '` supplied to' +
-        ' `' + componentName + '`. "value" and "label" property must be a string.'
-      );
+    if(typeof propValue[key] === 'object') {
+    
+      if (propValue[key].value === undefined || propValue[key].label === undefined) {
+        return new Error(
+          `Invalid prop ${propFullName} supplied to ${componentName}. Object property 'value' or 'label' is undefined.`
+        );
+      }
+      if (typeof propValue[key].value !== 'string' || typeof propValue[key].label !== 'string') {
+        return new Error(
+          'Invalid prop `' + propFullName + '` supplied to' +
+          ' `' + componentName + '`. "value" and "label" property must be a string.'
+        );
+      }
     }
   }),
-  /**
-    A Setter function. Must be a setter for 'columns' state.
-  */
-  setColumns: PropTypes.func.isRequired,
-
   /**
     Icon use to sort as ascending. Could be a component, element or text.
   */
@@ -301,8 +304,31 @@ SortableTable.propTypes = {
       tData: (value, column, columnIndex, data, dataIndex) => 
         ({prop: 'value'}) 
     }
+    --
+    { 
+      firstColumn: ({ prop: 'value'} 
+    }
+    --
+    { 
+      firstColumn: (data, index) => 
+        ({prop: 'value'}) 
+    }
+    --
+    { 
+      lastColumn: ({ prop: 'value'} 
+    }
+    --
+    { 
+      lastColumn: (data, index) => 
+        ({prop: 'value'}) 
+    }
   */
-  addProps:PropTypes.object
+  addProps:PropTypes.object,
+
+  /**
+   *  Set if table is sortable or not. Value should be boolean
+   */
+  isSortable: PropTypes.bool
 
 }
 
