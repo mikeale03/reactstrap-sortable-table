@@ -27,13 +27,14 @@ export const SampleTable = () => {
             headerOne: 'Ryan', headerTwo: 467, headerThree: '1/12/2011', headerFour: 'Ale'
         },
     ])
+    //let data;
 
     return (
         <SortableTable 
             bordered
             striped
             data={data}
-            setData={setData}
+            //setData={setData}
             dateColumns={['header3']}
             noSortColumns={['header4']}
 

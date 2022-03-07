@@ -53,7 +53,7 @@ const renderData = function(value, column, columnIndex, data, dataIndex, columnR
 }
 
 function SortableTable({
-  data = [],
+  data,
   setData = () => {},
   columns,
   sortIconAsc,
