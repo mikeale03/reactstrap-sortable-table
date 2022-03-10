@@ -139,7 +139,7 @@ function SortableTable(_ref) {
       setCols = _useState2[1];
 
   (0, _react.useEffect)(function () {
-    if (columns) {
+    if (columns && cols.length === 0) {
       setCols(columns.map(function (col) {
         return typeof col === 'string' ? {
           value: col,
@@ -149,7 +149,7 @@ function SortableTable(_ref) {
     }
   }, [columns]);
   (0, _react.useEffect)(function () {
-    if (data && cols.length === 0) {
+    if ((columns === undefined || columns === null) && data && cols.length === 0) {
       setCols(initColumns(data));
     }
   }, [data]);

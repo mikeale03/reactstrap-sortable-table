@@ -75,7 +75,7 @@ function SortableTable({
   const [cols, setCols] = useState([])
 
   useEffect(() => {
-    if(columns) {
+    if(columns && cols.length === 0) {
       setCols(columns.map( col =>
         typeof col === 'string' ?
           { value: col, label: toTitleCase(col) } :
@@ -85,7 +85,7 @@ function SortableTable({
   }, [columns])
 
   useEffect(() => {
-    if(data && cols.length === 0) {
+    if( (columns === undefined || columns === null) && data && cols.length === 0 ) {
       setCols(initColumns(data))
     }
   }, [data])
