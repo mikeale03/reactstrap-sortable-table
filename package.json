@@ -1,6 +1,6 @@
 {
   "name": "reactstrap-sortable-table",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A customizable react bootstrap sortable table component",
   "main": "index.js",
   "dependencies": {
