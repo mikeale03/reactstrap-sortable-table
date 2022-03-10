@@ -82,9 +82,8 @@ function SortableTable({
           col        
       ))
 
-    } else {
-      const c = initColumns(data)
-      setCols(c)
+    } else if(cols.length === 0) {
+      setCols(initColumns(data))
     }
   }, [columns, data])
 

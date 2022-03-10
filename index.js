@@ -146,9 +146,8 @@ function SortableTable(_ref) {
           label: toTitleCase(col)
         } : col;
       }));
-    } else {
-      var c = initColumns(data);
-      setCols(c);
+    } else if (cols.length === 0) {
+      setCols(initColumns(data));
     }
   }, [columns, data]);
 
