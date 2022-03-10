@@ -146,10 +146,13 @@ function SortableTable(_ref) {
           label: toTitleCase(col)
         } : col;
       }));
-    } else if (cols.length === 0) {
+    }
+  }, [columns]);
+  (0, _react.useEffect)(function () {
+    if (data && cols.length === 0) {
       setCols(initColumns(data));
     }
-  }, [columns, data]);
+  }, [data]);
 
   var sortByColumn = function sortByColumn(columnName) {
     var isDate = dateColumns.includes(columnName);

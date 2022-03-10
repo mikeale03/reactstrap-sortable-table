@@ -81,11 +81,14 @@ function SortableTable({
           { value: col, label: toTitleCase(col) } :
           col        
       ))
+    }
+  }, [columns])
 
-    } else if(cols.length === 0) {
+  useEffect(() => {
+    if(data && cols.length === 0) {
       setCols(initColumns(data))
     }
-  }, [columns, data])
+  }, [data])
 
   const sortByColumn = (columnName) => {
 
