@@ -138,8 +138,9 @@ function SortableTable(_ref) {
       cols = _useState2[0],
       setCols = _useState2[1];
 
+  var isAscendingMap = (0, _react.useRef)({});
   (0, _react.useEffect)(function () {
-    if (columns && cols.length === 0) {
+    if (columns) {
       setCols(columns.map(function (col) {
         return typeof col === 'string' ? {
           value: col,
@@ -158,31 +159,21 @@ function SortableTable(_ref) {
     var isDate = dateColumns.includes(columnName);
 
     if (isSortable && data.length) {
-      var _columns$columnIndex;
-
       if (noSortColumns.includes(columnName)) return;
-      var _columns = cols;
-
-      var columnIndex = _columns.findIndex(function (x) {
-        return x.value === columnName;
-      });
-
-      var sortOrder = ((_columns$columnIndex = _columns[columnIndex]) === null || _columns$columnIndex === void 0 ? void 0 : _columns$columnIndex.sortOrder) === 'asc' ? 'desc' : 'asc';
+      isAscendingMap.current[columnName] = isAscendingMap.current[columnName] ? false : true;
 
       var _data = _toConsumableArray(data);
 
-      _data.sort(sorter(sortOrder === 'asc', columnName, isDate));
+      _data.sort(sorter(isAscendingMap.current[columnName], columnName, isDate));
 
       setData(_data);
-      _columns[columnIndex]['sortOrder'] = sortOrder;
-      setCols(_columns);
     }
   };
 
   return _react["default"].createElement(_reactBootstrap.Table, rest, _react["default"].createElement("thead", addProps === null || addProps === void 0 ? void 0 : addProps.tHead, _react["default"].createElement("tr", addProps === null || addProps === void 0 ? void 0 : addProps.tHeadRow, firstColumnRender && _react["default"].createElement("th", firstColumnHeaderProp, firstColumnLabel), cols.map(function (col, index) {
     return _react["default"].createElement("th", _extends({
       onClick: function onClick() {
-        return sortByColumn(col.value, data, setData, setCols, noSortColumns);
+        return sortByColumn(col.value);
       },
       key: "columnheader-".concat(index),
       style: {
@@ -190,7 +181,7 @@ function SortableTable(_ref) {
       }
     }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tHeading) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tHeading(col, index) : addProps === null || addProps === void 0 ? void 0 : addProps.tHeading), col.label, isSortable && !noSortColumns.includes(col.value) && _react["default"].createElement("span", {
       className: "ms-1"
-    }, col.sortOrder === undefined ? sortIconAsc || '↓' : col.sortOrder === 'desc' ? sortIconAsc || '↓' : sortIconDesc || '↑'));
+    }, isAscendingMap.current[col.value] === undefined ? sortIconAsc || '↓' : !isAscendingMap.current[col.value] ? sortIconAsc || '↓' : sortIconDesc || '↑'));
   }), lastColumnRender && _react["default"].createElement("th", lastColumnHeaderProp, lastColumnLabel))), _react["default"].createElement("tbody", addProps === null || addProps === void 0 ? void 0 : addProps.tBody, data && data.map(function (d, index1) {
     return _react["default"].createElement("tr", _extends({
       key: "trIndex-".concat(d.id || index1)

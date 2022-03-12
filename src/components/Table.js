@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Table } from 'react-bootstrap'
 import PropTypes from 'prop-types';
 
@@ -73,9 +73,10 @@ function SortableTable({
 }) {
 
   const [cols, setCols] = useState([])
+  const isAscendingMap = useRef({})
 
   useEffect(() => {
-    if(columns && cols.length === 0) {
+    if(columns) {
       setCols(columns.map( col =>
         typeof col === 'string' ?
           { value: col, label: toTitleCase(col) } :
@@ -96,16 +97,11 @@ function SortableTable({
   
     if (isSortable && data.length) {
         if (noSortColumns.includes(columnName)) return
-  
-        let _columns = cols
-        const columnIndex = _columns.findIndex(x => x.value === columnName)
-        const sortOrder = _columns[columnIndex]?.sortOrder === 'asc' ? 'desc' : 'asc'
+        // toggle sortOrder
+        isAscendingMap.current[columnName] = isAscendingMap.current[columnName] ? false : true
         let _data = [...data]
-        _data.sort( sorter(sortOrder === 'asc', columnName, isDate) )
+        _data.sort( sorter(isAscendingMap.current[columnName], columnName, isDate) )
         setData(_data)
-  
-        _columns[columnIndex]['sortOrder'] = sortOrder
-        setCols(_columns)
     }
   }
 
@@ -117,15 +113,15 @@ function SortableTable({
           { firstColumnRender && <th {...firstColumnHeaderProp}>{firstColumnLabel}</th> }
 
           {cols.map((col, index) => (
-            <th onClick={() => sortByColumn(col.value, data, setData, setCols, noSortColumns)} key={`columnheader-${index}`} style={{cursor: 'pointer'}}
+            <th onClick={() => sortByColumn(col.value)} key={`columnheader-${index}`} style={{cursor: 'pointer'}}
               {...(typeof addProps?.tHeading === 'function' ? addProps?.tHeading(col, index) : addProps?.tHeading)}
             >
                 {col.label}
                 { isSortable && !noSortColumns.includes(col.value) &&
                 <span className='ms-1' >
                   { 
-                    col.sortOrder === undefined ? sortIconAsc || '↓' :
-                    col.sortOrder === 'desc' ? sortIconAsc || '↓' : 
+                    isAscendingMap.current[col.value] === undefined ? sortIconAsc || '↓' :
+                    !isAscendingMap.current[col.value] ? sortIconAsc || '↓' : 
                     sortIconDesc || '↑'  
                   }
                 </span>
