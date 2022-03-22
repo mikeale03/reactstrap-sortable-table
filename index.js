@@ -11,7 +11,7 @@ var _reactBootstrap = require("react-bootstrap");
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _excluded = ["data", "setData", "columns", "sortIconAsc", "sortIconDesc", "dateColumns", "noSortColumns", "firstColumnRender", "firstColumnLabel", "firstColumnHeaderProp", "lastColumnRender", "lastColumnLabel", "lastColumnHeaderProp", "columnRender", "addProps", "isSortable"];
+var _excluded = ["data", "setData", "columns", "sortIconAsc", "sortIconDesc", "dateColumns", "noSortColumns", "firstColumnRender", "firstColumnLabel", "firstColumnHeaderProp", "lastColumnRender", "lastColumnLabel", "lastColumnHeaderProp", "columnRender", "addProps", "isSortable", "withTotalColumns", "totalFirstColumnRender", "totalLastColumnRender", "totalRender"];
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -107,6 +107,14 @@ var renderData = function renderData(value, column, columnIndex, data, dataIndex
   return value;
 };
 
+var getTotal = function getTotal(data, column) {
+  var totalAmount = 0;
+  data.forEach(function (_data) {
+    totalAmount += _data[column.value];
+  });
+  return totalAmount;
+};
+
 function SortableTable(_ref) {
   var data = _ref.data,
       _ref$setData = _ref.setData,
@@ -131,6 +139,11 @@ function SortableTable(_ref) {
       addProps = _ref.addProps,
       _ref$isSortable = _ref.isSortable,
       isSortable = _ref$isSortable === void 0 ? true : _ref$isSortable,
+      _ref$withTotalColumns = _ref.withTotalColumns,
+      withTotalColumns = _ref$withTotalColumns === void 0 ? [] : _ref$withTotalColumns,
+      totalFirstColumnRender = _ref.totalFirstColumnRender,
+      totalLastColumnRender = _ref.totalLastColumnRender,
+      totalRender = _ref.totalRender,
       rest = _objectWithoutProperties(_ref, _excluded);
 
   var _useState = (0, _react.useState)([]),
@@ -170,7 +183,15 @@ function SortableTable(_ref) {
     }
   };
 
-  return _react["default"].createElement(_reactBootstrap.Table, rest, _react["default"].createElement("thead", addProps === null || addProps === void 0 ? void 0 : addProps.tHead, _react["default"].createElement("tr", addProps === null || addProps === void 0 ? void 0 : addProps.tHeadRow, firstColumnRender && _react["default"].createElement("th", firstColumnHeaderProp, firstColumnLabel), cols.map(function (col, index) {
+  var hasFirstColumn = function hasFirstColumn() {
+    return firstColumnRender || totalFirstColumnRender || firstColumnLabel;
+  };
+
+  var hasLastColumn = function hasLastColumn() {
+    return lastColumnRender || totalLastColumnRender || lastColumnLabel;
+  };
+
+  return _react["default"].createElement(_reactBootstrap.Table, rest, _react["default"].createElement("thead", addProps === null || addProps === void 0 ? void 0 : addProps.tHead, _react["default"].createElement("tr", addProps === null || addProps === void 0 ? void 0 : addProps.tHeadRow, hasFirstColumn() && _react["default"].createElement("th", firstColumnHeaderProp, firstColumnLabel), cols.map(function (col, index) {
     return _react["default"].createElement("th", _extends({
       onClick: function onClick() {
         return sortByColumn(col.value);
@@ -182,15 +203,19 @@ function SortableTable(_ref) {
     }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tHeading) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tHeading(col, index) : addProps === null || addProps === void 0 ? void 0 : addProps.tHeading), col.label, isSortable && !noSortColumns.includes(col.value) && _react["default"].createElement("span", {
       className: "ms-1"
     }, isAscendingMap.current[col.value] === undefined ? sortIconAsc || '↓' : !isAscendingMap.current[col.value] ? sortIconAsc || '↓' : sortIconDesc || '↑'));
-  }), lastColumnRender && _react["default"].createElement("th", lastColumnHeaderProp, lastColumnLabel))), _react["default"].createElement("tbody", addProps === null || addProps === void 0 ? void 0 : addProps.tBody, data && data.map(function (d, index1) {
+  }), hasLastColumn() && _react["default"].createElement("th", lastColumnHeaderProp, lastColumnLabel))), _react["default"].createElement("tbody", addProps === null || addProps === void 0 ? void 0 : addProps.tBody, data && data.map(function (d, index1) {
     return _react["default"].createElement("tr", _extends({
       key: "trIndex-".concat(d.id || index1)
-    }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow), firstColumnRender && _react["default"].createElement("td", _extends({}, addProps === null || addProps === void 0 ? void 0 : addProps.firstColumn, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.firstColumn) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.firstColumn(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.firstColumn), firstColumnRender(d, index1)), cols.map(function (col, index2) {
+    }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tBodyRow), hasFirstColumn() && _react["default"].createElement("td", typeof (addProps === null || addProps === void 0 ? void 0 : addProps.firstColumn) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.firstColumn(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.firstColumn, firstColumnRender && firstColumnRender(d, index1)), cols.map(function (col, index2) {
       return _react["default"].createElement("td", _extends({
         key: "index-".concat(index2)
-      }, addProps === null || addProps === void 0 ? void 0 : addProps.tData, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tData) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tData(d[col.value], col, index2, d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tData), renderData(d[col.value], col, index2, d, index1, columnRender));
-    }), lastColumnRender && _react["default"].createElement("td", _extends({}, addProps === null || addProps === void 0 ? void 0 : addProps.lastColumn, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.lastColumn) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.lastColumn(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.lastColumn), lastColumnRender(d, index1)));
-  })));
+      }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.tData) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.tData(d[col.value], col, index2, d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.tData), renderData(d[col.value], col, index2, d, index1, columnRender));
+    }), hasLastColumn() && _react["default"].createElement("td", typeof (addProps === null || addProps === void 0 ? void 0 : addProps.lastColumn) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.lastColumn(d, index1) : addProps === null || addProps === void 0 ? void 0 : addProps.lastColumn, lastColumnRender && lastColumnRender(d, index1)));
+  }), withTotalColumns.length > 0 && _react["default"].createElement("tr", addProps === null || addProps === void 0 ? void 0 : addProps.totalBodyRow, hasFirstColumn() && _react["default"].createElement("td", addProps === null || addProps === void 0 ? void 0 : addProps.totalFirstColumn, totalFirstColumnRender && totalFirstColumnRender()), cols.map(function (col, index) {
+    return _react["default"].createElement("td", _extends({
+      key: "index-".concat(index)
+    }, typeof (addProps === null || addProps === void 0 ? void 0 : addProps.totalData) === 'function' ? addProps === null || addProps === void 0 ? void 0 : addProps.totalData(col, index) : addProps === null || addProps === void 0 ? void 0 : addProps.totalData), withTotalColumns.includes(col.value) && (totalRender ? totalRender(getTotal(data, col), col, index) : getTotal(data, col)));
+  }), hasLastColumn() && _react["default"].createElement("td", addProps === null || addProps === void 0 ? void 0 : addProps.totalLastColumn, totalLastColumnRender && totalLastColumnRender()))));
 }
 
 SortableTable.propTypes = {
@@ -219,7 +244,11 @@ SortableTable.propTypes = {
   lastColumnHeaderProps: _propTypes["default"].object,
   columnRender: _propTypes["default"].arrayOf(_propTypes["default"].object),
   addProps: _propTypes["default"].object,
-  isSortable: _propTypes["default"].bool
+  isSortable: _propTypes["default"].bool,
+  withTotalColumns: _propTypes["default"].arrayOf(_propTypes["default"].string),
+  totalFirstColumn: _propTypes["default"].func,
+  totalLastColumnRender: _propTypes["default"].func,
+  totalRender: _propTypes["default"].func
 };
 var _default = SortableTable;
 exports["default"] = _default;

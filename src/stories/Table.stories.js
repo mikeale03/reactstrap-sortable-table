@@ -80,6 +80,9 @@ export const SampleTable = () => {
                     firstColumn: ({className: 'bg-success'})
                 }
             }
+            withTotalColumns={['headerTwo']}
+            totalRender={ (value) => <strong>{value.toLocaleString()}</strong> }
+            totalFirstColumnRender={() => <strong>Total</strong>}
         />
     )
 }
