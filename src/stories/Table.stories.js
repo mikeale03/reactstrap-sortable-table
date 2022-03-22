@@ -28,13 +28,21 @@ export const SampleTable = () => {
         },
     ])
 
+    const columns = [
+        { value:'headerOne', label: 'header 1' },
+        { value:'headerTwo', label: 'header 2' },
+        { value:'headerThree', label: 'header 3' },
+        { value:'headerFour', label: 'header 4' },
+    ]
+    
     return (
         <SortableTable 
             bordered
             striped
             data={data}
+            columns={columns}
             setData={setData}
-            dateColumns={['header3']}
+            dateColumns={['headerThree']}
             noSortColumns={['header4']}
 
             firstColumnRender={(data, index) => {
@@ -72,6 +80,9 @@ export const SampleTable = () => {
                     firstColumn: ({className: 'bg-success'})
                 }
             }
+            withTotalColumns={['headerTwo']}
+            totalRender={ (value) => <strong>{value.toLocaleString()}</strong> }
+            totalFirstColumnRender={() => <strong>Total</strong>}
         />
     )
 }
