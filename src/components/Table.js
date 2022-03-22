@@ -52,6 +52,14 @@ const renderData = function(value, column, columnIndex, data, dataIndex, columnR
   return value
 }
 
+const getTotal = (data, column) => {
+  let totalAmount = 0
+  data.forEach(_data => {
+      totalAmount += _data[column.value]
+  });
+  return totalAmount
+}
+
 function SortableTable({
   data,
   setData = () => {},
@@ -69,6 +77,10 @@ function SortableTable({
   columnRender = [],
   addProps,
   isSortable = true,
+  withTotalColumns = [],
+  totalFirstColumnRender,
+  totalLastColumnRender,
+  totalRender,
   ...rest
 }) {
 
@@ -105,12 +117,15 @@ function SortableTable({
     }
   }
 
+  const hasFirstColumn = () => firstColumnRender || totalFirstColumnRender || firstColumnLabel
+  const hasLastColumn = () => lastColumnRender || totalLastColumnRender || lastColumnLabel
+
   return (
     <Table {...rest} >
       <thead {...addProps?.tHead} >
         <tr {...addProps?.tHeadRow}>
 
-          { firstColumnRender && <th {...firstColumnHeaderProp}>{firstColumnLabel}</th> }
+          { hasFirstColumn() && <th {...firstColumnHeaderProp}>{firstColumnLabel}</th> }
 
           {cols.map((col, index) => (
             <th onClick={() => sortByColumn(col.value)} key={`columnheader-${index}`} style={{cursor: 'pointer'}}
@@ -129,7 +144,7 @@ function SortableTable({
             </th>
           ))}
 
-          { lastColumnRender && <th {...lastColumnHeaderProp}>{lastColumnLabel}</th> }
+          { hasLastColumn() && <th {...lastColumnHeaderProp}>{lastColumnLabel}</th> }
 
         </tr>
       </thead>
@@ -138,27 +153,52 @@ function SortableTable({
         { data && data.map( (d, index1) =>
         <tr key={`trIndex-${d.id || index1}`} {...(typeof addProps?.tBodyRow === 'function' ? addProps?.tBodyRow(d, index1) : addProps?.tBodyRow)}>
           
-          { firstColumnRender &&
-            <td {...addProps?.firstColumn} {...(typeof addProps?.firstColumn === 'function' ? addProps?.firstColumn(d, index1) : addProps?.firstColumn)}>
-              {firstColumnRender(d, index1)}
+          { hasFirstColumn() &&
+            <td {...(typeof addProps?.firstColumn === 'function' ? addProps?.firstColumn(d, index1) : addProps?.firstColumn)}>
+              {firstColumnRender && firstColumnRender(d, index1)}
             </td>
           }
 
           { cols.map( (col, index2) =>
             <td key={`index-${index2}`} 
-              {...addProps?.tData} {...(typeof addProps?.tData === 'function' ? addProps?.tData(d[col.value], col, index2, d, index1) : addProps?.tData)}
+              {...(typeof addProps?.tData === 'function' ? addProps?.tData(d[col.value], col, index2, d, index1) : addProps?.tData)}
             >
               { renderData(d[col.value], col, index2, d, index1, columnRender) }
             </td> 
           )}
 
-          { lastColumnRender &&
-            <td {...addProps?.lastColumn} {...(typeof addProps?.lastColumn === 'function' ? addProps?.lastColumn(d, index1) : addProps?.lastColumn)}>
-              {lastColumnRender(d, index1)}
+          { hasLastColumn() &&
+            <td {...(typeof addProps?.lastColumn === 'function' ? addProps?.lastColumn(d, index1) : addProps?.lastColumn)}>
+              {lastColumnRender && lastColumnRender(d, index1)}
             </td>
           }
         </tr>
         )}
+
+        { withTotalColumns.length > 0 && 
+        <tr {...addProps?.totalBodyRow}>
+          
+          { hasFirstColumn() &&
+            <td {...addProps?.totalFirstColumn} >
+              {totalFirstColumnRender && totalFirstColumnRender()}
+            </td>
+          }
+
+          { cols.map( (col, index) =>
+            <td key={`index-${index}`} 
+              {...(typeof addProps?.totalData === 'function' ? addProps?.totalData(col, index) : addProps?.totalData)}
+            >
+              { withTotalColumns.includes(col.value) && (totalRender ? totalRender(getTotal(data, col), col, index) : getTotal(data, col)) }
+            </td> 
+          )}
+
+          { hasLastColumn() &&
+            <td {...addProps?.totalLastColumn} >
+              {totalLastColumnRender && totalLastColumnRender()}
+            </td>
+          }
+        </tr>
+        }
 
       </tbody>
     </Table>
@@ -321,13 +361,53 @@ SortableTable.propTypes = {
       lastColumn: (data, index) => 
         ({prop: 'value'}) 
     }
+    --
+    { 
+      totalBodyRow: { prop: 'value' }
+    }
+    --
+    { 
+      totalFirstColumn: { prop: 'value' }
+    }
+    --
+    { 
+      totalLastColumn: { prop: 'value' }
+    }
+    --
+    { 
+      totalData: { prop: 'value' }
+    }
+    --
+    { 
+      totalData: (column, index) => 
+        ({prop: 'value'}) 
+    }
   */
   addProps:PropTypes.object,
 
   /**
-   *  Set if table is sortable or not. Value should be boolean
-   */
-  isSortable: PropTypes.bool
+  *  Set if table is sortable or not. Value should be boolean
+  */
+  isSortable: PropTypes.bool,
+
+  /**
+  *  Specify columns that will have totals in last row
+  */
+  withTotalColumns: PropTypes.arrayOf(PropTypes.string),
+
+  /**
+  *  callback function to render in first column of total row
+  */
+  totalFirstColumn: PropTypes.func,
+
+  /**
+  *  callback function to render in last column of total row
+  */
+  totalLastColumnRender: PropTypes.func,
+  /**
+  *  callback function to render total data
+  */
+  totalRender: PropTypes.func
 
 }
 
