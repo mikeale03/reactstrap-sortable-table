@@ -272,7 +272,7 @@ SortableTable.propTypes = {
   /**
     Add props to first column rendered by firstColumnRender callback
   */
-  firstColumnHeaderProps: PropTypes.object,
+  firstColumnHeaderProp: PropTypes.object,
 
    /**
     A callback function if you want to render additional element in the last column
@@ -290,7 +290,7 @@ SortableTable.propTypes = {
   /**
     Add props to last column header rendered by lastColumnRender callback
   */
-  lastColumnHeaderProps: PropTypes.object,
+  lastColumnHeaderProp: PropTypes.object,
 
   /**
     An array of objects specifying a column value and a render callback function if you want a custom rendered element within a column.
